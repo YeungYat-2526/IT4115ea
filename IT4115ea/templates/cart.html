@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block title %}購物車 - 微型商店{% endblock %}
+{% block content %}
+  <h1><i class="bi bi-cart"></i> 購物車</h1>
+  
+  {% if cart_items %}
+    <div class="table-responsive">
+      <table class="table table-hover">
+        <thead class="table-light">
+          <tr>
+            <th>商品</th>
+            <th>單價</th>
+            <th>數量</th>
+            <th>小計</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in cart_items %}
+            <tr>
+              <td>
+                <a href="{{ url_for('product_detail', product_id=item.product.id) }}" class="text-decoration-none">
+                  <strong>{{ item.product.name }}</strong>
+                </a>
+              </td>
+              <td>HK$ {{ '%.2f'|format(item.product.price) }}</td>
+              <td>
+                <form method="post" action="{{ url_for('update_cart', item_id=item.id) }}" class="d-inline">
+                  <div class="input-group" style="width: 130px;">
+                    <button class="btn btn-outline-secondary btn-sm" type="submit" name="action" value="decrease" title="減少">
+                      <i class="bi bi-dash"></i>
+                    </button>
+                    <input type="text" class="form-control form-control-sm text-center" value="{{ item.quantity }}" readonly>
+                    <button class="btn btn-outline-secondary btn-sm" type="submit" name="action" value="increase" title="增加">
+                      <i class="bi bi-plus"></i>
+                    </button>
+                  </div>
+                </form>
+              </td>
+              <td><strong>HK$ {{ '%.2f'|format(item.subtotal()) }}</strong></td>
+              <td>
+                <form method="post" action="{{ url_for('remove_from_cart', item_id=item.id) }}" class="d-inline" onsubmit="return confirm('確定要移除此商品嗎？');">
+                  <button type="submit" class="btn btn-danger btn-sm">
+                    <i class="bi bi-trash"></i> 刪除
+                  </button>
+                </form>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+        <tfoot class="table-light">
+          <tr>
+            <td colspan="3" class="text-end"><h5>總計：</h5></td>
+            <td><h5><strong class="text-primary">HK$ {{ '%.2f'|format(total) }}</strong></h5></td>
+            <td></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <div class="d-flex gap-2 justify-content-end mt-4">
+      <a href="{{ url_for('index') }}" class="btn btn-secondary btn-lg">
+        <i class="bi bi-shop"></i> 繼續購物
+      </a>
+      <a href="#" class="btn btn-primary btn-lg">
+        <i class="bi bi-credit-card"></i> 結帳
+      </a>
+    </div>
+  {% else %}
+    <div class="alert alert-info" role="alert">
+      <i class="bi bi-cart-x"></i> 購物車是空的。
+    </div>
+    <a href="{{ url_for('index') }}" class="btn btn-primary btn-lg">
+      <i class="bi bi-shop"></i> 開始購物
+    </a>
+  {% endif %}
+{% endblock %}

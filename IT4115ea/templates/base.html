@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}微型購物網站{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='styles.css') }}" rel="stylesheet">
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+      <div class="container">
+        <a class="navbar-brand" href="{{ url_for('index') }}">微型商店</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <!-- 搜尋欄 -->
+          <form class="d-flex flex-grow-1 mx-3" method="GET" action="{{ url_for('index') }}">
+            <input class="form-control form-control-sm" type="search" name="q" placeholder="搜尋商品..." value="{{ search_query or '' }}">
+            <button class="btn btn-outline-primary btn-sm ms-2" type="submit">搜尋</button>
+          </form>
+          
+          <ul class="navbar-nav ms-auto">
+            {% if current_user.is_authenticated %}
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('profile') }}">
+                  {% if current_user.is_admin %}
+                    <span class="badge bg-danger">👤 管理員</span> {{ current_user.username }}
+                  {% elif current_user.is_merchant %}
+                    <span class="badge bg-success">👤 商家</span> {{ current_user.username }}
+                  {% else %}
+                    <span class="badge bg-info">👤 會員</span> {{ current_user.username }}
+                  {% endif %}
+                </a>
+              </li>
+              {% if current_user.is_merchant or current_user.is_admin %}
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('merchant_dashboard') }}"><i class="bi bi-shop"></i> 商家中心</a></li>
+              {% endif %}
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('cart') }}">
+                  <i class="bi bi-cart"></i> 購物車
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('notifications') }}">
+                  <i class="bi bi-bell"></i> 
+                  <span id="notification-badge" class="badge bg-danger d-none">0</span>
+                  訊息
+                </a>
+              </li>
+              <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}"><i class="bi bi-box-arrow-right"></i> 登出</a></li>
+            {% else %}
+              <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}"><i class="bi bi-box-arrow-in-right"></i> 登入</a></li>
+              <li class="nav-item"><a class="nav-link" href="{{ url_for('register') }}"><i class="bi bi-person-plus"></i> 註冊</a></li>
+            {% endif %}
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <div class="alert alert-info alert-dismissible fade show" role="alert">
+            {% for m in messages %}{{ m }}<br>{% endfor %}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        {% endif %}
+      {% endwith %}
+      {% block content %}{% endblock %}
+    </div>
+
+    <!-- 頁腳/資訊欄 -->
+    <footer class="bg-light border-top mt-5 py-4">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-3 mb-3">
+            <h6 class="fw-bold">關於我們</h6>
+            <p class="small text-muted">微型商店是一個現代化的線上購物平台，為您提供優質的商品和服務。</p>
+          </div>
+          <div class="col-md-3 mb-3">
+            <h6 class="fw-bold">快速鏈接</h6>
+            <ul class="list-unstyled small">
+              <li><a href="{{ url_for('index') }}" class="text-decoration-none text-muted">首頁</a></li>
+              <li><a href="{{ url_for('category_list') }}" class="text-decoration-none text-muted">分類</a></li>
+              <li><a href="{{ url_for('messages') }}" class="text-decoration-none text-muted">訊息</a></li>
+            </ul>
+          </div>
+          <div class="col-md-3 mb-3">
+            <h6 class="fw-bold">幫助與支持</h6>
+            <ul class="list-unstyled small">
+              <li><a href="#" class="text-decoration-none text-muted">常見問題</a></li>
+              <li><a href="#" class="text-decoration-none text-muted">聯絡我們</a></li>
+              <li><a href="#" class="text-decoration-none text-muted">隱私政策</a></li>
+            </ul>
+          </div>
+          <div class="col-md-3 mb-3">
+            <h6 class="fw-bold">跟蹤我們</h6>
+            <div class="btn-group btn-group-sm" role="group">
+              <a href="#" class="btn btn-outline-secondary">
+                <i class="bi bi-facebook"></i>
+              </a>
+              <a href="#" class="btn btn-outline-secondary">
+                <i class="bi bi-twitter"></i>
+              </a>
+              <a href="#" class="btn btn-outline-secondary">
+                <i class="bi bi-instagram"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+        <hr class="my-3">
+        <div class="text-center text-muted small">
+          <p class="mb-0">&copy; 2026 微型商店。版權所有。</p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- 通知徽章自動更新腳本 -->
+    {% if current_user.is_authenticated %}
+    <script>
+      // 更新通知徽章
+      function updateNotificationBadge() {
+        fetch('{{ url_for("get_unread_notifications_count") }}')
+          .then(response => response.json())
+          .then(data => {
+            const badge = document.getElementById('notification-badge');
+            if (data.count > 0) {
+              badge.textContent = data.count;
+              badge.classList.remove('d-none');
+            } else {
+              badge.classList.add('d-none');
+            }
+          });
+      }
+      
+      // 頁面加載時更新一次
+      updateNotificationBadge();
+      
+      // 每30秒更新一次
+      setInterval(updateNotificationBadge, 30000);
+    </script>
+    {% endif %}
+  </body>
+</html>
+

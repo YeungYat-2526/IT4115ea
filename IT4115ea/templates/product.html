@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% block title %}{{ product.name }} - 微型商店{% endblock %}
+{% block content %}
+  <div class="row">
+    <div class="col-md-8">
+      <h1>{{ product.name }}</h1>
+      
+      <div class="card mb-4">
+        <div class="card-body">
+          <div class="mb-3">
+            <h3 class="text-primary">HK$ {{ '%.2f'|format(product.price) }}</h3>
+            <p class="card-text">
+              {% if product.average_rating() %}
+                <i class="bi bi-star-fill text-warning"></i> 評分：{{ product.average_rating() }}/5
+              {% else %}
+                <small class="text-muted"><i class="bi bi-star"></i> 尚無評價</small>
+              {% endif %}
+            </p>
+            <p class="card-text">
+              <small class="text-muted">商家：<strong>{{ product.merchant.username }}</strong></small>
+            </p>
+          </div>
+
+          <hr>
+          
+          <h5>商品描述</h5>
+          <p>{{ product.description }}</p>
+
+          {% if current_user.is_authenticated %}
+            <div class="btn-group" role="group">
+              <form method="POST" action="{{ url_for('add_to_cart', product_id=product.id) }}" style="display:inline;">
+                <button type="submit" class="btn btn-primary btn-lg">
+                  <i class="bi bi-cart-plus"></i> 加入購物車
+                </button>
+              </form>
+              <a href="{{ url_for('messages', user_id=product.merchant_id) }}" class="btn btn-secondary btn-lg">
+                <i class="bi bi-chat"></i> 聯絡賣家
+              </a>
+            </div>
+          {% else %}
+            <div class="alert alert-info" role="alert">
+              <a href="{{ url_for('login') }}" class="alert-link">登入</a>以購買商品或與賣家聯絡
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">商家信息</h5>
+          <p class="card-text">
+            <strong>{{ product.merchant.username }}</strong><br>
+            <small class="text-muted">商家</small>
+          </p>
+          <a href="{{ url_for('messages', user_id=product.merchant_id) }}" class="btn btn-secondary btn-sm w-100">
+            <i class="bi bi-envelope"></i> 發送訊息
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <h2 class="mt-5">評論與評分</h2>
+  
+  {% if reviews %}
+    <div class="row">
+      {% for r in reviews %}
+        <div class="col-md-12 mb-3">
+          <div class="card">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <h6 class="card-title mb-1">{{ r.author.username }}</h6>
+                  <small class="text-muted">{{ r.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
+                </div>
+                <div class="badge bg-warning text-dark">
+                  <i class="bi bi-star-fill"></i> {{ r.rating }}/5
+                </div>
+              </div>
+              <p class="card-text mt-3">{{ r.content }}</p>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-info" role="alert">
+      <i class="bi bi-info-circle"></i> 尚無評論。成為第一個留下評論的人吧！
+    </div>
+  {% endif %}
+
+  {% if current_user.is_authenticated %}
+    <div class="card mt-4">
+      <div class="card-body">
+        <h5 class="card-title">留下您的評論</h5>
+        <form method="POST" novalidate>
+          {{ form.hidden_tag() }}
+          
+          <div class="mb-3">
+            {{ form.rating.label(class="form-label") }}
+            <div class="btn-group" role="group">
+              <input type="radio" class="btn-check" name="rating" id="rating1" value="1">
+              <label class="btn btn-outline-secondary" for="rating1"><i class="bi bi-star-fill"></i> 1</label>
+              
+              <input type="radio" class="btn-check" name="rating" id="rating2" value="2">
+              <label class="btn btn-outline-secondary" for="rating2"><i class="bi bi-star-fill"></i> 2</label>
+              
+              <input type="radio" class="btn-check" name="rating" id="rating3" value="3">
+              <label class="btn btn-outline-secondary" for="rating3"><i class="bi bi-star-fill"></i> 3</label>
+              
+              <input type="radio" class="btn-check" name="rating" id="rating4" value="4">
+              <label class="btn btn-outline-secondary" for="rating4"><i class="bi bi-star-fill"></i> 4</label>
+              
+              <input type="radio" class="btn-check" name="rating" id="rating5" value="5">
+              <label class="btn btn-outline-secondary" for="rating5"><i class="bi bi-star-fill"></i> 5</label>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            {{ form.content.label(class="form-label") }}
+            {{ form.content(class="form-control", rows="4", placeholder="分享您對此商品的看法...") }}
+            <small class="form-text text-muted">最多1000個字符</small>
+          </div>
+
+          {{ form.submit(class="btn btn-primary") }}
+        </form>
+      </div>
+    </div>
+  {% else %}
+    <div class="alert alert-info mt-4" role="alert">
+      <a href="{{ url_for('login') }}" class="alert-link">登入</a>後即可留下您的評論
+    </div>
+  {% endif %}
+
+  <div class="mt-4">
+    <a href="{{ url_for('index') }}" class="btn btn-secondary">
+      <i class="bi bi-house"></i> 返回商品列表
+    </a>
+  </div>
+{% endblock %}

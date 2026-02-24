@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block title %}編輯商品 - 微型商店{% endblock %}
+{% block content %}
+  <div class="row">
+    <div class="col-md-8 offset-md-2">
+      <h1><i class="bi bi-pencil-square"></i> 編輯商品</h1>
+      <p class="text-muted mb-4">修改您的商品信息</p>
+
+      <div class="card">
+        <div class="card-body">
+          <form method="POST" novalidate>
+            {{ form.hidden_tag() }}
+            
+            <div class="mb-3">
+              {{ form.name.label(class="form-label") }}
+              {% if form.name.errors %}
+                {{ form.name(class="form-control is-invalid") }}
+                <div class="invalid-feedback">
+                  {% for error in form.name.errors %}{{ error }}{% endfor %}
+                </div>
+              {% else %}
+                {{ form.name(class="form-control") }}
+              {% endif %}
+              <small class="form-text text-muted">商品的名稱，最多200個字符</small>
+            </div>
+
+            <div class="mb-3">
+              {{ form.description.label(class="form-label") }}
+              {% if form.description.errors %}
+                {{ form.description(class="form-control is-invalid", rows="5") }}
+                <div class="invalid-feedback">
+                  {% for error in form.description.errors %}{{ error }}{% endfor %}
+                </div>
+              {% else %}
+                {{ form.description(class="form-control", rows="5") }}
+              {% endif %}
+              <small class="form-text text-muted">詳細描述您的商品</small>
+            </div>
+
+            <div class="mb-3">
+              {{ form.price.label(class="form-label") }}
+              <div class="input-group">
+                <span class="input-group-text">HK$</span>
+                {% if form.price.errors %}
+                  {{ form.price(class="form-control is-invalid", type="number", step="0.01") }}
+                  <div class="invalid-feedback">
+                    {% for error in form.price.errors %}{{ error }}{% endfor %}
+                  </div>
+                {% else %}
+                  {{ form.price(class="form-control", type="number", step="0.01") }}
+                {% endif %}
+              </div>
+              <small class="form-text text-muted">商品的價格</small>
+            </div>
+
+            <div class="d-flex gap-2">
+              {{ form.submit(class="btn btn-primary btn-lg") }}
+              <a href="{{ url_for('merchant_dashboard') }}" class="btn btn-secondary btn-lg">取消</a>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="alert alert-info mt-4" role="alert">
+        <i class="bi bi-info-circle"></i> <strong>提示：</strong>修改後，您的商品信息將立即更新。如需下架此商品，請返回商家中心操作。
+      </div>
+    </div>
+  </div>
+{% endblock %}

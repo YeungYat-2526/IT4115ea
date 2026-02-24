@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}編輯分類{% endblock %}
+{% block content %}
+  <h2>編輯分類</h2>
+  <form method="post">
+    {{ form.hidden_tag() }}
+    <div class="mb-3">
+      {{ form.name.label }}
+      {{ form.name(class_='form-control') }}
+    </div>
+    {{ form.submit(class_='btn btn-primary') }}
+  </form>
+{% endblock %}

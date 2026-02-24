@@ -1,0 +1,156 @@
+body { 
+    padding-bottom: 40px; 
+}
+
+.card-text { 
+    min-height: 3.5rem; 
+}
+
+/* === 按鈕風格 - 低調特徵 === */
+.btn {
+    transition: all 0.3s ease;
+    border-radius: 6px;
+    font-weight: 500;
+}
+
+/* 主要按鈕 - 低調藍色 */
+.btn-primary {
+    background-color: #5a7a9c;
+    border-color: #5a7a9c;
+    box-shadow: 0 2px 4px rgba(90, 122, 156, 0.15);
+}
+
+.btn-primary:hover {
+    background-color: #475d7a;
+    border-color: #475d7a;
+    box-shadow: 0 4px 8px rgba(90, 122, 156, 0.25);
+    transform: translateY(-1px);
+}
+
+.btn-primary:active {
+    background-color: #3d4d63;
+    box-shadow: 0 1px 2px rgba(90, 122, 156, 0.2);
+}
+
+/* 次要按鈕 - 低調灰色 */
+.btn-secondary {
+    background-color: #8b8b8b;
+    border-color: #8b8b8b;
+    box-shadow: 0 2px 4px rgba(139, 139, 139, 0.15);
+}
+
+.btn-secondary:hover {
+    background-color: #6f6f6f;
+    border-color: #6f6f6f;
+    box-shadow: 0 4px 8px rgba(139, 139, 139, 0.25);
+    transform: translateY(-1px);
+}
+
+/* 危險按鈕 - 低調紅色 */
+.btn-danger {
+    background-color: #a85555;
+    border-color: #a85555;
+    box-shadow: 0 2px 4px rgba(168, 85, 85, 0.15);
+}
+
+.btn-danger:hover {
+    background-color: #8c4444;
+    border-color: #8c4444;
+    box-shadow: 0 4px 8px rgba(168, 85, 85, 0.25);
+    transform: translateY(-1px);
+}
+
+/* 成功按鈕 - 低調綠色 */
+.btn-success {
+    background-color: #6b8b5f;
+    border-color: #6b8b5f;
+    box-shadow: 0 2px 4px rgba(107, 139, 95, 0.15);
+}
+
+.btn-success:hover {
+    background-color: #556b4e;
+    border-color: #556b4e;
+    box-shadow: 0 4px 8px rgba(107, 139, 95, 0.25);
+    transform: translateY(-1px);
+}
+
+/* === 導航欄品牌 Logo === */
+.navbar-brand {
+    font-size: 24px;
+    font-weight: bold;
+    background: linear-gradient(135deg, #5a7a9c 0%, #8b8b8b 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-decoration: none;
+    letter-spacing: 1px;
+}
+
+.navbar-brand::before {
+    content: "◆";
+    margin-right: 8px;
+    font-size: 28px;
+}
+
+.navbar-brand:hover {
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+/* === 導航欄鏈接 === */
+.navbar-nav .nav-link {
+    color: #5a7a9c !important;
+    font-weight: 500;
+    position: relative;
+    transition: all 0.3s ease;
+    margin-left: 5px;
+}
+
+.navbar-nav .nav-link::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: #5a7a9c;
+    transition: width 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #3d4d63 !important;
+}
+
+.navbar-nav .nav-link:hover::after {
+    width: 100%;
+}
+
+/* === 卡片風格改進 === */
+.card {
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    transform: translateY(-2px);
+}
+
+/* === 標題和文本 === */
+h1, h2, h3, h4, h5 {
+    color: #3d4d63;
+    font-weight: 600;
+}
+
+/* === 警告信息 === */
+.alert {
+    border-radius: 6px;
+    border: none;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.alert-info {
+    background-color: #e8f0f8;
+    color: #3d4d63;
+}

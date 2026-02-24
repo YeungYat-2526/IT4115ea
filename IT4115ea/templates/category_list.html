@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}分類管理{% endblock %}
+{% block content %}
+  <h2>分類列表</h2>
+  <a href="{{ url_for('add_category') }}" class="btn btn-primary mb-3">新增分類</a>
+  <table class="table">
+    <thead>
+      <tr><th>ID</th><th>名稱</th><th>操作</th></tr>
+    </thead>
+    <tbody>
+      {% for c in categories %}
+        <tr>
+          <td>{{ c.id }}</td>
+          <td>{{ c.name }}</td>
+          <td>
+            <a href="{{ url_for('edit_category', category_id=c.id) }}" class="btn btn-sm btn-warning">編輯</a>
+            <form method="post" action="{{ url_for('delete_category', category_id=c.id) }}" style="display:inline;">
+              <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('確定刪除?')">刪除</button>
+            </form>
+          </td>
+        </tr>
+      {% else %}
+        <tr><td colspan="3">尚無分類</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

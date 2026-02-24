@@ -1,0 +1,206 @@
+{% extends 'base.html' %}
+{% block title %}首頁 - 微型商店{% endblock %}
+{% block content %}
+  <!-- 標題區域 -->
+  <div class="mb-5">
+    <h1><i class="bi bi-shop"></i> 商品列表</h1>
+    {% if search_query %}
+      <p class="text-muted">搜尋結果：<strong>"{{ search_query }}"</strong></p>
+    {% else %}
+      <p class="text-muted">歡迎來到我們的微型商店，瀏覽最新上架的商品</p>
+    {% endif %}
+  </div>
+
+  {% if search_query %}
+    <!-- 搜尋結果顯示 -->
+    {% if products %}
+      <div class="alert alert-success" role="alert">
+        <i class="bi bi-check-circle"></i> 找到 <strong>{{ products|length }}</strong> 個搜尋結果
+      </div>
+      <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for p in products %}
+          <div class="col">
+            <div class="card h-100 shadow-sm">
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">{{ p.name }}</h5>
+                <p class="card-text flex-grow-1 text-muted">{{ p.description[:120] }}{% if p.description|length > 120 %}...{% endif %}</p>
+                
+                <div class="mb-3">
+                  <p class="card-text"><strong>HK$ {{ '%.2f'|format(p.price) }}</strong></p>
+                  <p class="card-text">
+                    {% if p.average_rating() %}
+                      <i class="bi bi-star-fill text-warning"></i> 評分：{{ p.average_rating() }}/5
+                    {% else %}
+                      <small class="text-muted"><i class="bi bi-star"></i> 尚無評價</small>
+                    {% endif %}
+                  </p>
+                  <p class="card-text">
+                    <small class="text-muted">商家：{{ p.merchant.username }}</small>
+                  </p>
+                </div>
+
+                <a href="{{ url_for('product_detail', product_id=p.id) }}" class="btn btn-primary btn-sm">
+                  <i class="bi bi-eye"></i> 查看詳情
+                </a>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="alert alert-info" role="alert">
+        <i class="bi bi-info-circle"></i> 沒有找到與 "<strong>{{ search_query }}</strong>" 相符的商品。
+      </div>
+    {% endif %}
+  {% else %}
+    <!-- 按分類顯示商品 -->
+    {% if categories %}
+      {% set categorized_products = {} %}
+      {% for product in products %}
+        {% if product.category_id %}
+          {% if product.category_id not in categorized_products %}
+            {% set _ = categorized_products.update({product.category_id: []}) %}
+          {% endif %}
+          {% set _ = categorized_products[product.category_id].append(product) %}
+        {% endif %}
+      {% endfor %}
+
+      <!-- 分類部分 -->
+      {% for category in categories %}
+        {% if category.id in categorized_products and categorized_products[category.id] %}
+          <div class="mb-5">
+            <div class="d-flex align-items-center mb-4">
+              <h3 class="mb-0">
+                <i class="bi bi-tag"></i> {{ category.name }}
+              </h3>
+              <span class="badge bg-primary ms-2">{{ categorized_products[category.id]|length }} 件商品</span>
+            </div>
+            
+            <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
+              {% for p in categorized_products[category.id] %}
+                <div class="col">
+                  <div class="card h-100 shadow-sm hover-shadow">
+                    <div class="card-body d-flex flex-column">
+                      <h6 class="card-title">{{ p.name }}</h6>
+                      <p class="card-text flex-grow-1 text-muted small">{{ p.description[:100] }}{% if p.description|length > 100 %}...{% endif %}</p>
+                      
+                      <div class="mb-3">
+                        <p class="card-text mb-1"><strong>HK$ {{ '%.2f'|format(p.price) }}</strong></p>
+                        <p class="card-text mb-1">
+                          {% if p.average_rating() %}
+                            <i class="bi bi-star-fill text-warning"></i> <span class="small">{{ p.average_rating() }}/5</span>
+                          {% else %}
+                            <small class="text-muted"><i class="bi bi-star"></i> 尚無評價</small>
+                          {% endif %}
+                        </p>
+                        <p class="card-text">
+                          <small class="text-muted">{{ p.merchant.username }}</small>
+                        </p>
+                      </div>
+
+                      <a href="{{ url_for('product_detail', product_id=p.id) }}" class="btn btn-outline-primary btn-sm w-100">
+                        <i class="bi bi-eye"></i> 查看
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+          <hr>
+        {% endif %}
+      {% endfor %}
+
+      <!-- 未分類商品 -->
+      {% if 0 in categorized_products or (products|length > categorized_products.values()|sum(attribute='__len__')) %}
+        <div class="mb-5">
+          <div class="d-flex align-items-center mb-4">
+            <h3 class="mb-0">
+              <i class="bi bi-box"></i> 其他商品
+            </h3>
+            <span class="badge bg-secondary ms-2">{{ products|length - categorized_products.values()|sum(attribute='__len__') }} 件商品</span>
+          </div>
+          
+          <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4">
+            {% for p in products %}
+              {% if not p.category_id %}
+                <div class="col">
+                  <div class="card h-100 shadow-sm hover-shadow">
+                    <div class="card-body d-flex flex-column">
+                      <h6 class="card-title">{{ p.name }}</h6>
+                      <p class="card-text flex-grow-1 text-muted small">{{ p.description[:100] }}{% if p.description|length > 100 %}...{% endif %}</p>
+                      
+                      <div class="mb-3">
+                        <p class="card-text mb-1"><strong>HK$ {{ '%.2f'|format(p.price) }}</strong></p>
+                        <p class="card-text mb-1">
+                          {% if p.average_rating() %}
+                            <i class="bi bi-star-fill text-warning"></i> <span class="small">{{ p.average_rating() }}/5</span>
+                          {% else %}
+                            <small class="text-muted"><i class="bi bi-star"></i> 尚無評價</small>
+                          {% endif %}
+                        </p>
+                        <p class="card-text">
+                          <small class="text-muted">{{ p.merchant.username }}</small>
+                        </p>
+                      </div>
+
+                      <a href="{{ url_for('product_detail', product_id=p.id) }}" class="btn btn-outline-primary btn-sm w-100">
+                        <i class="bi bi-eye"></i> 查看
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+    {% else %}
+      <!-- 沒有分類時的備用顯示 -->
+      <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for p in products %}
+          <div class="col">
+            <div class="card h-100 shadow-sm">
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title">{{ p.name }}</h5>
+                <p class="card-text flex-grow-1 text-muted">{{ p.description[:120] }}{% if p.description|length > 120 %}...{% endif %}</p>
+                
+                <div class="mb-3">
+                  <p class="card-text"><strong>HK$ {{ '%.2f'|format(p.price) }}</strong></p>
+                  <p class="card-text">
+                    {% if p.average_rating() %}
+                      <i class="bi bi-star-fill text-warning"></i> 評分：{{ p.average_rating() }}/5
+                    {% else %}
+                      <small class="text-muted"><i class="bi bi-star"></i> 尚無評價</small>
+                    {% endif %}
+                  </p>
+                  <p class="card-text">
+                    <small class="text-muted">商家：{{ p.merchant.username }}</small>
+                  </p>
+                </div>
+
+                <a href="{{ url_for('product_detail', product_id=p.id) }}" class="btn btn-primary">
+                  <i class="bi bi-eye"></i> 查看詳情
+                </a>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endif %}
+
+  {% if not products and not search_query %}
+    <div class="alert alert-info" role="alert">
+      <i class="bi bi-info-circle"></i> 目前沒有商品。
+    </div>
+  {% endif %}
+
+  <style>
+    .hover-shadow:hover {
+      box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+      transition: all 0.3s ease;
+      transform: translateY(-2px);
+    }
+  </style>
+{% endblock %}
