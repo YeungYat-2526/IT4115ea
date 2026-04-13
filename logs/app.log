@@ -1,0 +1,4 @@
+2026-04-13 03:09:41,530 INFO: 微型商店應用啟動 [in /workspaces/IT4115ea/IT4115ea/app.py:29]
+2026-04-13 03:11:25,710 WARNING: 登入失敗: 用戶名 eden [in /workspaces/IT4115ea/IT4115ea/app.py:241]
+2026-04-13 03:11:28,261 WARNING: 登入失敗: 用戶名 eden [in /workspaces/IT4115ea/IT4115ea/app.py:241]
+2026-04-13 03:13:22,031 WARNING: 登入失敗: 用戶名 eden [in /workspaces/IT4115ea/IT4115ea/app.py:241]
