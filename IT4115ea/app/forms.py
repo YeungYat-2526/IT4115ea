@@ -56,3 +56,12 @@ class EditProductForm(FlaskForm):
     price = FloatField('價格', validators=[DataRequired()])
     submit = SubmitField('更新商品')
 
+class UpdateUserForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired(), Length(min=3, max=80)])
+    password = PasswordField('New Password', validators=[Length(min=6)])
+    password2 = PasswordField('Repeat New Password', validators=[EqualTo('password')])
+    bio = TextAreaField('Bio')
+    phone = StringField('Phone', validators=[Length(max=20)])
+    address = TextAreaField('Address')
+    submit = SubmitField('Update')
+

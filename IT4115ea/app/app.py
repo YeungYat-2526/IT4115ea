@@ -2,7 +2,7 @@ from flask import Flask, render_template, redirect, url_for, flash, request, jso
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from models import db, User, Product, Review, CartItem, Message, Category, Notification
 from flask_migrate import Migrate
-from forms import RegistrationForm, LoginForm, ProductForm, ReviewForm, CategoryForm, EditProductForm
+from forms import RegistrationForm, LoginForm, ProductForm, ReviewForm, CategoryForm, EditProductForm, UpdateUserForm
 from werkzeug.security import generate_password_hash
 import os
 import logging
@@ -397,14 +397,33 @@ def create_app():
     @app.route('/profile/edit', methods=['GET', 'POST'])
     @login_required
     def edit_profile():
-        if request.method == 'POST':
-            current_user.bio = request.form.get('bio')
-            current_user.phone = request.form.get('phone')
-            current_user.address = request.form.get('address')
+        form = UpdateUserForm()
+        if form.validate_on_submit():
+            # 檢查username是否已被使用
+            existing_user = User.query.filter_by(username=form.username.data).first()
+            if existing_user and existing_user.id != current_user.id:
+                flash('此用戶名已被使用。')
+                return redirect(url_for('edit_profile'))
+            
+            current_user.username = form.username.data
+            
+            if form.password.data:
+                current_user.set_password(form.password.data)
+            
+            current_user.bio = form.bio.data
+            current_user.phone = form.phone.data
+            current_user.address = form.address.data
+            
             db.session.commit()
             flash('個人資料已更新。')
             return redirect(url_for('profile'))
-        return render_template('edit_profile.html')
+        elif request.method == 'GET':
+            form.username.data = current_user.username
+            form.bio.data = current_user.bio
+            form.phone.data = current_user.phone
+            form.address.data = current_user.address
+        
+        return render_template('edit_profile.html', form=form)
 
     # 訊息通知頁面
     @app.route('/notifications')
