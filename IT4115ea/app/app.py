@@ -1,6 +1,7 @@
 from flask import Flask, render_template, redirect, url_for, flash, request, jsonify
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from flask_migrate import Migrate
+from sqlalchemy.exc import IntegrityError
 
 # === 正確的絕對 import（推薦方式） ===
 from app.models import db, User, Product, Review, CartItem, Message, Category, Notification
@@ -151,11 +152,16 @@ def create_app():
             return redirect(url_for('category_list'))
         form = CategoryForm()
         if form.validate_on_submit():
-            c = Category(name=form.name.data)
-            db.session.add(c)
-            db.session.commit()
-            flash('分類已新增。')
-            return redirect(url_for('category_list'))
+            try:
+                c = Category(name=form.name.data)
+                db.session.add(c)
+                db.session.commit()
+                flash('分類已新增。')
+                return redirect(url_for('category_list'))
+            except IntegrityError:
+                db.session.rollback()
+                flash('此分類名稱已存在，請使用不同的名稱。')
+                app.logger.warning(f'嘗試新增重複的分類: {form.name.data}')
         return render_template('add_category.html', form=form)
 
     @app.route('/category/<int:category_id>/edit', methods=['GET', 'POST'])
@@ -167,10 +173,15 @@ def create_app():
         category = Category.query.get_or_404(category_id)
         form = CategoryForm(obj=category)
         if form.validate_on_submit():
-            category.name = form.name.data
-            db.session.commit()
-            flash('分類已更新。')
-            return redirect(url_for('category_list'))
+            try:
+                category.name = form.name.data
+                db.session.commit()
+                flash('分類已更新。')
+                return redirect(url_for('category_list'))
+            except IntegrityError:
+                db.session.rollback()
+                flash('此分類名稱已存在，請使用不同的名稱。')
+                app.logger.warning(f'嘗試將分類 {category_id} 更新為重複名稱: {form.name.data}')
         return render_template('edit_category.html', form=form, category=category)
 
     @app.route('/category/<int:category_id>/delete', methods=['POST'])
