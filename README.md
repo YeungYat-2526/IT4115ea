@@ -61,7 +61,7 @@ flask db upgrade
 ### 步驟 5：啟動應用
 
 ```bash
-python app.py
+python app/app.py
 ```
 
 應用將在 `http://localhost:8080` 上運行。在瀏覽器中打開此地址即可訪問網站。
