@@ -88,6 +88,11 @@ class CartItem(db.Model):
     product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False, index=True)
     product = db.relationship('Product', backref='cart_items')
 
+    def subtotal(self):
+        if not self.product:
+            return 0.0
+        return self.quantity * self.product.price
+
 
 # ============================
 # 5. Review - 商品評價

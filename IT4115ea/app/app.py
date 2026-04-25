@@ -486,4 +486,5 @@ if __name__ == '__main__':
     # bind to 0.0.0.0 so host machine can access the dev server (useful in containers)
     port = int(os.environ.get('PORT', 8080))
     is_dev = os.environ.get('FLASK_ENV') == 'development'
-    app.run(host='0.0.0.0', port=port, debug=is_dev)
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8080, debug=True)   # 確保 debug=True
