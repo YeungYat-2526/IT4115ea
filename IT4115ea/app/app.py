@@ -1,8 +1,11 @@
 from flask import Flask, render_template, redirect, url_for, flash, request, jsonify
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
-from models import db, User, Product, Review, CartItem, Message, Category, Notification
 from flask_migrate import Migrate
-from forms import RegistrationForm, LoginForm, ProductForm, ReviewForm, CategoryForm, EditProductForm, UpdateUserForm
+
+# === 正確的絕對 import（推薦方式） ===
+from app.models import db, User, Product, Review, CartItem, Message, Category, Notification
+from app.forms import RegistrationForm, LoginForm, ProductForm, ReviewForm, CategoryForm, EditProductForm, UpdateUserForm
+
 from werkzeug.security import generate_password_hash
 import os
 import logging
