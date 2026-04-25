@@ -18,14 +18,14 @@ class User(db.Model, UserMixin):
     is_admin = db.Column(db.Boolean, default=False, index=True)
     is_active = db.Column(db.Boolean, default=True)
     
-    # 個人資料
+   
     bio = db.Column(db.Text, nullable=True)
     avatar_url = db.Column(db.String(255), nullable=True)
     phone = db.Column(db.String(20), nullable=True)
     address = db.Column(db.Text, nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-    # 關係定義
+   
     reviews = db.relationship('Review', backref='author', lazy=True, cascade="all, delete-orphan")
     cart_items = db.relationship('CartItem', backref='user', lazy=True, cascade="all, delete-orphan")
     products = db.relationship('Product', backref='merchant', lazy=True)

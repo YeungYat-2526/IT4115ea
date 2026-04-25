@@ -4,7 +4,7 @@ from flask_migrate import Migrate
 from sqlalchemy.exc import IntegrityError
 
 # === 正確的絕對 import（推薦方式） ===
-from app.models import db, User, Product, Review, CartItem, Message, Category, Notification
+from app.models import db, User, Product, Review, CartItem, Message, Category, Notification, Favorite, Order, Address
 from app.forms import RegistrationForm, LoginForm, ProductForm, ReviewForm, CategoryForm, EditProductForm, UpdateUserForm
 
 from werkzeug.security import generate_password_hash
