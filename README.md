@@ -1,4 +1,4 @@
-# IT4115ea - Flask 電商應用
+# shop - Flask 電商應用
 
 輕量級電子商務平台，以 Flask 框架實現，整合帳戶管理、商品展示、購物籃功能與評論系統。
 
@@ -19,7 +19,7 @@
 ### 步驟 1：進入專案目錄
 
 ```bash
-cd /workspaces/IT4115ea/IT4115ea
+cd /workspaces/IT4115ea/shop
 ```
 
 ### 步驟 2：建立並啟用虛擬環境（首次設置）
@@ -82,7 +82,7 @@ ERROR: Could not open requirements file: [Errno 2] No such file or directory: 'r
 ```
 /workspaces/IT4115ea/
 ├── README.md
-└── IT4115ea/
+└── shop/
     ├── app.py
     ├── models.py
     ├── requirements.txt    ← 在這個目錄
@@ -91,7 +91,7 @@ ERROR: Could not open requirements file: [Errno 2] No such file or directory: 'r
 
 正確的命令：
 ```bash
-cd /workspaces/IT4115ea/IT4115ea
+cd /workspaces/IT4115ea/shop
 pip install -r requirements.txt
 ```
 
@@ -189,7 +189,7 @@ flask db upgrade
 ##  專案結構
 
 ```
-IT4115ea/
+shop/
 ├── app.py                # Flask 應用主文件
 ├── models.py             # 數據庫模型定義
 ├── forms.py              # WTForms 表單定義
