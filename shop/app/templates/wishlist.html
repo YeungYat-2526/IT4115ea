@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}我的願望清單 - 微型商店{% endblock %}
+
+{% block content %}
+  <h2>我的願望清單</h2>
+  
+  {% if wishlist_items %}
+    <div class="row">
+      {% for item in wishlist_items %}
+        <div class="col-md-4 mb-4">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">{{ item.product.name }}</h5>
+              <p class="card-text">HK$ {{ '%.2f'|format(item.product.price) }}</p>
+              <a href="{{ url_for('product_detail', product_id=item.product.id) }}" class="btn btn-primary">查看詳情</a>
+              <form action="{{ url_for('remove_from_wishlist', item_id=item.id) }}" method="post" style="display:inline;">
+                <button type="submit" class="btn btn-danger">移除</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>您的願望清單是空的。</p>
+    <a href="{{ url_for('index') }}" class="btn btn-primary">去逛逛商品</a>
+  {% endif %}
+{% endblock %}
