@@ -4,8 +4,8 @@ from flask_migrate import Migrate
 from sqlalchemy.exc import IntegrityError
 
 # === 正確的絕對 import（推薦方式） ===
-from .models import db, User, Product, Review, CartItem, Message, Category, Notification, Favorite, Order, Address
-from .forms import RegistrationForm, LoginForm, ProductForm, ReviewForm, CategoryForm, EditProductForm, UpdateUserForm
+from models import db, User, Product, Review, CartItem, Message, Category, Notification, Favorite, Order, Address
+from forms import RegistrationForm, LoginForm, ProductForm, ReviewForm, CategoryForm, EditProductForm, UpdateUserForm
 
 from werkzeug.security import generate_password_hash
 import os
@@ -483,8 +483,7 @@ def create_app():
 
 if __name__ == '__main__':
     app = create_app()
-    # bind to 0.0.0.0 so host machine can access the dev server (useful in containers)
-    port = int(os.environ.get('PORT', 8080))
-    is_dev = os.environ.get('FLASK_ENV') == 'development'
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080, debug=True)   # 確保 debug=True
+    app = create_app()
+    app.run(host='0.0.0.0', port=8080, debug=True)

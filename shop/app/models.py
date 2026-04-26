@@ -50,7 +50,7 @@ class User(db.Model, UserMixin):
 # ============================
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False, unique=True, index=True)
+    name = db.Column(db.String(50), nullable=False, unique=True, index=True)
     products = db.relationship('Product', backref='category', lazy=True)
 
 
@@ -59,7 +59,7 @@ class Category(db.Model):
 # ============================
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(200), nullable=False, index=True)
+    name = db.Column(db.String(50), nullable=False, index=True)
     description = db.Column(db.Text, nullable=True)
     price = db.Column(db.Float, nullable=False, default=0.0, index=True)
     
