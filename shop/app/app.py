@@ -3,7 +3,6 @@ from flask_login import LoginManager, login_user, logout_user, login_required, c
 from flask_migrate import Migrate
 from sqlalchemy.exc import IntegrityError
 
-# === 正確的絕對 import（推薦方式） ===
 from models import db, User, Product, Review, CartItem, Message, Category, Notification, Favorite, Order, Address
 from forms import RegistrationForm, LoginForm, ProductForm, ReviewForm, CategoryForm, EditProductForm, UpdateUserForm
 
@@ -486,4 +485,4 @@ if __name__ == '__main__':
 
 if __name__ == '__main__':
     app = create_app()
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=8080, debug=True)
