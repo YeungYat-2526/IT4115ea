@@ -13,7 +13,17 @@ from logging.handlers import RotatingFileHandler
 import datetime
 
 def create_app():
-    app = Flask(__name__)
+    # 獲取當前文件所在目錄 (app 目錄)
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    
+    # 設置模板和靜態文件的路徑
+    template_dir = os.path.join(current_dir, 'templates')
+    static_dir = os.path.join(current_dir, 'static')
+    
+    app = Flask(__name__, 
+                template_folder=template_dir,
+                static_folder=static_dir)
+
     app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret')
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite3'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -65,7 +75,7 @@ def create_app():
         else:
             products = products_query.order_by(Product.id.desc()).all()
         
-        return render_template('index.html', products=products, categories=categories, search_query=query)
+        return render_template("index.html", products=products, categories=categories, search_query=query)
 
     # 商業賬號 - 商家儀表板 (查看自己的商品)
     @app.route('/merchant/dashboard')
@@ -485,4 +495,4 @@ if __name__ == '__main__':
 
 if __name__ == '__main__':
     app = create_app()
-    app.run(host='0.0.0.0', port=8080, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
